@@ -127,17 +127,19 @@ Slave:
       localSum.sum := sum of all p in c's cluster
       localsum.numPts := size of c's cluster
       localCentroidSums += localSum
-    Send(localCentroidSum to Master)
+    Send(localCentroidSum)
     Recieve(convergence)
 </code></pre>
 </p>
-
-
 <p>
   Because we wait until this single-node join to calculate the new centroid, it's clear that this algorithm is
   equivalent to the sequential algorithm, in that it converges in the same number of iterations. We make our gains
-  in the fact that any given node is only dealing with a $\frac{|P|}{p}$ sized set of points. However, we do pay 
-  a communication overhead
+  in the fact that any given node is only dealing with a $\frac{|P|}{p}$ sized set of points.
+</p>
+<p>
+   However, we do pay 
+  a communication overhead - for each iteration there are $k+1$ messages to transmit the current centers and convergence, 
+  and $pk$ messages to send all localSums to the master, giving a total of $O(pk)$ messages per round. 
 </p>
 
 
