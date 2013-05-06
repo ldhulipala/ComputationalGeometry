@@ -55,10 +55,34 @@ cost associated with a clustering, which we minimize.
 <p>
 Suppose we are given a set of points, \(P, |P| = n\), as well as a parameter \(k \in \mathbb{N}\). The k-means problem
 is to find a set of \(k\) points which minimize the sum-of-squares distances of every point in $P$ to their closest
-point in $C$. Concretely, this is
-
+point in $C$. Concretely, this cost is
+$$ |P_{c}|^{2}_{2} = \sum_{p \in P} d_{\mathcal{M}}(p,C))^{2} $$
+where the $k$-means problem is to then find a set $k$ centers, $C$, such that 
+$\|P_{c}\|^{2}_{2}$ is minimized.
+</p>
+<p>
+The simplest, and perhaps most intuitive algorithm for computing a set of $C$ centers is Lloyd's Algorithm, 
+which is done iteratively by relaxing the Voronoi diagram at each step. The algorithm proceed as follows : 
+<pre><code>proc kMeans(P,k)
+  C :=  k initial centers randomly chosen from P.
+  drift := 0
+  repeat while (drift > epsilon):
+    for all p in P:
+      assign p to the cluster of it's nearest neighbour
+    for all c in C:
+      nC := centroid of c's cluster
+      c := nC
+  return C
+</code></pre>
 </p>
 
+<h3>Coresets</h3>
+
+
+
+
+<h3>Coresets</h3>
+A z
 
 <pre><code>$ cd your_repo_root/repo_name
 $ git fetch origin
