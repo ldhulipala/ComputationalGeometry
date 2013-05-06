@@ -31,15 +31,34 @@
           <a href="https://github.com/laxmandhulipala/ComputationalGeometry" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
         <hr>
 
         <section id="main_content">
           <h3>Clustering</h3>
 
 <p>
-Given a set of \(P\) points in \(\mathbb{R}^{n}\). 
-$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+Very broadly, the Clustering problem is to place place objects, for our purposes points in \(\mathbb{R}^{n}\),
+in groups such that the within-group similarity is very high. Concretely, given a set of objects \(P\), and a set 
+of centers \(C\) in some metric
+space \(\mathcal{X}, d\), where \(d : \mathcal{X} \times \mathcal{X} \mapsto [0, \infty) \) satisfying the standard 
+axioms of a metric, we can assign every point of \(P\) to it's nearest neighbour in \(C\). Typically, there is also a 
+cost associated with a clustering, which we minimize. 
 </p>
+
+<h3>K-Means Clustering</h3>
+<p>
+Suppose we are given a set of points, \(P, |P| = n\), as well as a parameter \(k \in \mathbb{N}\). The k-means problem
+is to find a set of \(k\) points which minimize the sum-of-squares distances of every point in $P$ to their closest
+point in $C$. Concretely, this is
+
+</p>
+
 
 <pre><code>$ cd your_repo_root/repo_name
 $ git fetch origin
