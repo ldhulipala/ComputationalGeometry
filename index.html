@@ -40,7 +40,7 @@ MathJax.Hub.Config({
         <hr>
 
         <section id="main_content">
-          <h3>Clustering</h3>
+          <h2>Clustering</h2>
 
 <p>
 Very broadly, the Clustering problem is to place place objects, for our purposes points in \(\mathbb{R}^{n}\),
@@ -60,21 +60,76 @@ $$ |P_{c}|^{2}_{2} = \sum_{p \in P} d_{\mathcal{M}}(p,C))^{2} $$
 where the $k$-means problem is to then find a set $k$ centers, $C$, such that 
 $\|P_{c}\|^{2}_{2}$ is minimized.
 </p>
+<h3>Sequential K-Means</h3>
 <p>
 The simplest, and perhaps most intuitive algorithm for computing a set of $C$ centers is Lloyd's Algorithm, 
 which is done iteratively by relaxing the Voronoi diagram at each step. The algorithm proceed as follows : 
 <pre><code>proc kMeans(P,k)
   C :=  k initial centers randomly chosen from P.
-  drift := 0
-  repeat while (drift > epsilon):
+  convergence := +infty
+  repeat while (convergence > epsilon):
+    drift := 0
     for all p in P:
       assign p to the cluster of it's nearest neighbour
     for all c in C:
       nC := centroid of c's cluster
+      drift := max(drift, d(nC,c))
       c := nC
+    convergence := drift
   return C
 </code></pre>
 </p>
+<p>
+The centroid is the mean of the points in a cluster. As we iteratively set new cluster centers to be the
+centroids of their cluster, points which were initially not a part of a cluster could then join the cluster. 
+We terminate the algorithm when the convergence, which captures how far the centroids moved during the last
+iteration is less than some $\epsilon$. 
+</p>
+
+<h3>Parallel K-Means</h3>
+<p>
+  We can optimize the k-means algoritm for cluster-based computing settings by dividing splitting $P$, the input
+  point set amongst a set of $p \geq 2$ processors. The work on a node then 
+  becomes to centroid-sums for each of the $k$ current, global centers. The node then sends its local 
+  centroid-sums back to a master-node, who calculates a global sum for each centroid, and divides this sum by the number of 
+  points assigned to that center, globally, to calculate the new center. Dividing up the pseudo-code into the master task
+  and slave task, we have
+
+<pre class="brush: python"></code> Master:
+  C := k initial centers randomly chosen from P
+  convergence := +infty
+  split P up amongst all p nodes
+  repeat while (convergence > epsilon):
+    drift := 0  
+    nodeCents := Gather(localCentroidSums,(p1,p2,...,pn))
+    for all c in C:
+     
+Slave:
+  localP := subset of P recieved from Master
+  convergence := +infty
+  repeat while (convergence > epsilon):
+    C := Receive(global centers from Master)
+    for all p in P:
+      assign p to the cluster of it's nearest neighbour
+    localCentroidSums := <>
+    for all c in C:
+      localSum.sum := sum of all p in c's cluster
+      localsum.numPts := size of c's cluster
+      localCentroidSums += localSum
+    Send(localCentroidSum to Master)
+    
+</code></pre>
+</p>
+
+
+<p>
+  Because we wait until this single-node join to calculate the new centroid, it's clear that this algorithm is
+  equivalent to the sequential algorithm, in that it converges in the same number of iterations. We make our gains
+  in the fact that any given node is only dealing with a $\frac{|P|}{p}$ sized set of points. However, we do pay 
+  a communication overhead
+</p>
+
+
 
 <h3>Coresets</h3>
 
