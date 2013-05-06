@@ -101,8 +101,18 @@ iteration is less than some $\epsilon$.
   split P up amongst all p nodes
   repeat while (convergence > epsilon):
     drift := 0  
+    Broadcast(drift)
+    Broadcast(C)
     nodeCents := Gather(localCentroidSums,(p1,p2,...,pn))
     for all c in C:
+      cSum := sum of all localSum.sum's for this cluster from p1,p2,...,pn
+      numPts := sum of all localSum.numPts's for this cluster from p1,p2,...,pn
+      c' := cSum/numPts
+      drift = max(drift, d(c',c))
+      c := c'
+    convergence := drift
+  return C 
+      
      
 Slave:
   localP := subset of P recieved from Master
