@@ -87,11 +87,6 @@ MathJax.Hub.Config({
     where $\langle u, p \rangle$ computes the inner product of $u$ and $p$. 
     </p>
 
-    <p>
-    A subset $Q \subset P$ is called the $\epsilon$-kernel if 
-    </p>
-    
-
     </p>
 
     <h2>Properties</h2>
@@ -118,23 +113,66 @@ MathJax.Hub.Config({
     </p>
 
   <h3>Clustering Revisited</h3>
+  <p>
   Formally now, given $P$, a set of $n$ points in $\mathbb{R}^d$, suppose we wish to compute a set 
   $C$ of $k$ centers such that we minimize 
-   $$Cst(P_{C}) = \sum_{p \in P} d(p,C)$$. 
+   $$Cst(P_{C}) = \sum_{p \in P} d(p,C)$$
   A weighted subset $S \subset P$ is a $(k,\epsilon)$-coreset if 
   $$\forall C \in \mathbb{R}^{d}, (1-\epsilon)Cst(P_{C}) \leq Cst(S_{C}) \leq (1+\epsilon)Cst(P_{C})$$
+  </p>
+  <p>
+    That is to say that for any set of proposed centers $C \in \mathbb{R}^d$, the cost on the coreset is
+  an $\epsilon$-approximation of the cost on the original set of points. 
+  </p>
+  <p>
+    The original 
+  </p>
 
   
   <h3> Potential in a Distributed Setting </h3>
+  <p>
   The Merge property of coresets is especially useful in a distributed setting. If the union of 
   two $\epsilon$-coresets is an $\epsilon$-coreset, we can split a large set of data into $p$ subsets,
   allocating a subset for every node. Each node then computes a $(1+\epsilon)$-coreset for the 
   measure of interest, and performs the standard reduce operation, depicted below
   <img class="reduce-tree" src="http://laxmandhulipala.github.io/ComputationalGeometry/images/reduce.png"></img>
-  This however causes the size of the final coreset to depend on $l$. We can remove this reliance 
-  by computing, after every merge operation an $(1+\epsilon')$ coreset of the merged coreset. If we
-  
-    
+  This however causes the size of the final coreset to depend on $p$. One way to remove this reliance
+  is to compute a tighter-coreset at each node - say $\epsilon/2$. Then, upon completing the 
+  final merge, we can compute a $(1 + \epsilon/2)$-coreset of the merged coreset. As the merged coreset
+  was a $(1+ \epsilon/2)$-coreset of the original point-set, a $(1 + \epsilon/2)$ coreset of this 
+  coreset is a $(1 + \epsilon)$-coreset of the original point-set (by the Sketch property).
+  </p>
+   
+
+  <h3> Potential in a Streaming Setting </h3>
+  <p>
+  Suppose we are given a potentially infinite stream of points, where it is highly impractical
+  to store all $n$-seen points in memory. A coreset becomes invaluable in this setting, as it often
+  allows us to store a set of points whose size is independent of $n$ that computes statistics 
+  that are $(1 + \epsilon)$-approximations. 
+  </p>
+  <p>
+   A rough idea is as follows : we fill up our buffer with as many points as it can hold, and 
+   compute a $(1 + \epsilon)$-coreset for this set of points. We then merge it with any previously 
+   computed coresets, generating a larger $(1 + \epsilon)$-coreset. Under this scheme, however, 
+   our space-utilization could prove to be problematic - if the coresets are not size-independent,
+   we will quickly run out of space. 
+  </p>
+  <p>
+   A proposal : While sufficient space remains, compute $(1+\epsilon/2)$ coresets for every chunk
+  of points. Once no further data can be stored, compute a $(1 + \epsilon/2)$ coreset for the current,
+  merged coreset. This is a $(1 + \epsilon)$-coreset by the Sketch property. However, the number of points
+  could be sufficiently large that even these doubly-constructed $(1+\epsilon)$-coresets cause 
+  us to run out of memory. 
+  </p>
+  <p>
+    If we know our stream is non-infinite, but contains some $n$ elements, we can determine a constant 
+  $\alpha$, parametrized by $\epsilon$, the size of the data-buffer, and the memory capacity so that we 
+  initially compute 
+  $(1 + \epsilon/\alpha)$-coresets, then when they overflow memory, a $(1 + 2\epsilon/\alpha)$-coreset of
+  the $(1 + \epsilon/\alpha)$-coreset,
+  and so on, until we finally compute a $(1 + \epsilon)$-coreset of the entire set of $n$ points. 
+  </p>
    
     
 
