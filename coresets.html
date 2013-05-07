@@ -130,8 +130,10 @@ MathJax.Hub.Config({
   two $\epsilon$-coresets is an $\epsilon$-coreset, we can split a large set of data into $p$ subsets,
   allocating a subset for every node. Each node then computes a $(1+\epsilon)$-coreset for the 
   measure of interest, and performs the standard reduce operation, depicted below
-  <img src="http://laxmandhulipala.github.io/ComputationalGeometry/images/reduce.png"></img>
-
+  <img class="reduce-tree" src="http://laxmandhulipala.github.io/ComputationalGeometry/images/reduce.png"></img>
+  This however causes the size of the final coreset to depend on $l$. We can remove this reliance 
+  by computing, after every merge operation an $(1+\epsilon')$ coreset of the merged coreset. If we
+  
     
    
     
