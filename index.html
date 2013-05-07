@@ -142,10 +142,32 @@ Slave:
   and $pk$ messages to send all localSums to the master, giving a total of $O(pk)$ messages per round. 
 </p>
 
+<h3>Implementation</h3>
+<p>
+  The tarball consists of both a parallel and sequential implementation of Lloyd's algorithm for points in $\mathbb{R}^{2}$ 
+  in C++. The parallel implementation
+  uses OpenMPI, which implements the MPI semantics. The parallel version is also implemented so that every machine runs the same
+  binary, where the rank of a node (assigned by MPI) determines whether the node is a master or slave. 
+</p>
 
+<h3>Usage</h3>
+<p>
+  Both the sequential and parallel implementations require an input file of newline delimited points, where each point is two 
+  space delimited floats. Example compilation and execution is given below : 
+  <pre><code>$mpicxx seq.cc -o seq.out
+$./seq.out inputs/3clust100k.txt 3
+$d = 9223372036854775808.000000
+$d = 1.927183
+$d = 1.601250
+$d = 0.464520
+Finished after 4 iterations, centers are :
+Point = (5.692603,4.003222)
+Point = (3.083077,7.408052)
+Point = (4.717878,0.942966)
+  </code></pre>
+</p>
 
 <h3>Coresets</h3>
-
 
 
 
