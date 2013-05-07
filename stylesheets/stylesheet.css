@@ -102,19 +102,7 @@ header h2 {
   margin-bottom: 40px;
 }
 
-.sidebar {
-    position: fixed;
-    float :left;
-    background-color : #282827;
-    z-index: 100;
-    width: 100px;
-    height: 100%;
-    padding: 0px 0px 0px 30px;
-    text-align: right;
-    left : 0;
-    top : 0;
-    color : white;
-}
+
 
 .sidebar-collapsed {
     position: fixed;
@@ -366,17 +354,33 @@ footer a:hover {
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
 
+
+
 /* #Media Queries
 ================================================== */
 
 /* Smaller than standard 960 (devices and browsers) */
-@media only screen and (max-width: 959px) {}
+@media only screen and (min-width: 959px) {
+  }
+
 
 /* Tablet Portrait size to standard 960 (devices and browsers) */
-@media only screen and (min-width: 768px) and (max-width: 959px) {}
+@media only screen and (min-width: 768px) and (max-width: 959px) {
 
+}
 /* All Mobile Sizes (devices and browser) */
 @media only screen and (max-width: 767px) {
+
+  .sidebar {
+    display : none;
+    background-color : #282827;
+    padding: 0px 0px 0px 0px;
+    text-align: left;
+    top : 0;
+    color : white;
+    width = 100%;
+  }
+
   header {
     padding-top: 10px;
     padding-bottom: 10px;
