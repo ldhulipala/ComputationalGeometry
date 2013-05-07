@@ -176,10 +176,31 @@ Point = (4.717878,0.942966)
   </code></pre>
 
   <img class="reduce-tree" src="http://laxmandhulipala.github.io/ComputationalGeometry/images/resultsChart.png"></img>
+  <p>
+    As expected, as the number of nodes in our system increased, total processor time increased, as every node had to 
+    read in the entire input dataset. However, the total time on the system decreased, as with each new node, a single 
+    iteration of $k$-means was computed significantly faster, with a small increase in the time spent communicating over
+    the network.
+  </p>
 
     <img class="reduce-tree" src="http://laxmandhulipala.github.io/ComputationalGeometry/images/processorTime.png"></img>
 
   <img class="reduce-tree" src="http://laxmandhulipala.github.io/ComputationalGeometry/images/timeElapsed.png"></img>
+
+  <p>
+    Some questions to consider further are whether we can devise a strategy where we increase the pre-processing time before
+    starting the $k$-means algorithm in order to give every node a point-set which 'roughly' resembles the original point-set,
+    so that an entire $k$-means calculation can be done on every node, with the final set of centers being the average of the 
+    centers computed at every node. This would reduce network overhead significantly, as there would be no communication between 
+    a slave and master other than at initialization, and once the $k$-means algorithm converges on that node. 
+  </p>
+  <p>
+    Another idea is to have slaves perform within-ring communication. Just like as in our implementation, we assign each slave-node
+    a subset of the original points, this time chosen randomly so as to decrease the pre-processing time. Each slave node then computes
+    a set of $k$-centroidSums, and averages its results with its left and right neighbours. This involves communication with two neighbours
+    for every node, which is still $O(pk)$ messages per round, but decreases the dependence of the algorithm on a single master (we 
+    can remove the single-point of failure in this manner). 
+  </p>
 
         </section>
 
