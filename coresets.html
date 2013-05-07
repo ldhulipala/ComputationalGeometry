@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Clustering</title>
+  </head>
+
+  <div class="sidebar">
+    <div class="sidebar-title">
+      Topics
+    </div>
+    <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/"> Home </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/kmeans.html"> K-Means </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/coresets.html"> Coresets </a>
+    </div>
+    
+  </div>
+  
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1><a href="http://laxmandhulipala.github.io/ComputationalGeometry/">Parallel Clustering</a></h1>
+          <h2>Carnegie Mellon, 15-456</h2>
+        </header>
+
+        <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+        <hr>
+
+        <section id="main_content">
+    <h2>Coresets</h2>
+    <p>
+  Central to motivating coresets is the idea of an extent measure. Intuitively, an extent measure of
+  a point set $P$ captures some property of $P$, or characterizes a geometric shape which encloses $P$. 
+  Given some measure $\mu$ and point-set $P$, we define an $\epsilon$-coreset of $P$ to be a subset $Q \subset P$
+  such that 
+      $$(1-\epsilon)\mu(P) \leq \mu(Q)$$
+    </p>
+    <p>
+  Such a coreset is of particular interest to the clustering problem. An 
+  $\epsilon$-coreset of $P$ for the $k$-median, or $k$-means problem is a weighted subset 
+  of $S$ such that for any set of $k$ points in $\mathbb{R}^d$, the weighted sum of distances from 
+  the points in $S$ to their nearest center is a $1 + \epsilon$ approximation of the sum of distances
+  from points in $P$ to their nearest center. 
+    </p>
+    <p>
+  Once we have an $\epsilon$-coreset, $S$, if $S$ is considerably smaller than $P$, we can brute-force
+  an optimal solution to $k$-medians, or $k$-means and know that this set of centers not much worse than 
+  the optimal set of centers for $P$. 
+    </p>
+
+    <h3>A Coreset for Directional Width</h3>
+    <p>
+    Given a point set, $P \in \mathbb{R}^{d}$, and any direction $u \in \mathbb{S}^{d-1}$, the directional width 
+    of $P$ in the direction $u$ is 
+    $$ \omega(u,P) = \max_{p \in } \langle u, p \rangle - \min_{p \in P} \langle u, p \rangle $$
+    where $\langle u, p \rangle$ computes the inner product of $u$ and $p$. 
+    </p>
+
+    <p>
+    A subset $Q \subset P$ is called the $\epsilon$-kernel if 
+    </p>
+    
+
+    </p>
+
+        </section>
+
+        <footer>
+          This site is maintained by <a href="https://github.com/laxmandhulipala">laxmandhulipala</a><br>
+        </footer>
+
+
+        
+      </div>
+    </div>
+  </body>
+</html>
