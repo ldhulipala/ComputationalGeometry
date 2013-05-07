@@ -102,6 +102,34 @@ header h2 {
   margin-bottom: 40px;
 }
 
+.sidebar {
+    position: fixed;
+    float :left;
+    background-color : #282827;
+    z-index: 100;
+    width: 100px;
+    height: 100%;
+    padding: 0px 0px 0px 30px;
+    text-align: right;
+    left : 0;
+    top : 0;
+    color : white;
+}
+
+.sidebar-collapsed {
+    position: fixed;
+    float : left;
+    background-color : #282827;
+    width: 10px;
+    height: 100%;
+    display : none;
+    padding-top : 10px;
+    text-align : center;
+    left : 0;
+    top : 0;
+    color : white;
+}
+
 a.button {
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;                     
@@ -155,6 +183,7 @@ a.button span {
 #download-zip span {
   background: transparent url(../images/zip-icon.png) 12px 50% no-repeat;
 }
+
 #download-tar-gz span {
   background: transparent url(../images/tar-gz-icon.png) 12px 50% no-repeat;
 }
