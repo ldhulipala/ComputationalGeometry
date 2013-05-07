@@ -82,7 +82,7 @@ MathJax.Hub.Config({
     </p>
 
 
-    <h3>A Coreset for Directional Width</h3>
+    <h3>Directional Width</h3>
     <p>
     Given a point set, $P \in \mathbb{R}^{d}$, and any direction $u \in \mathbb{S}^{d-1}$, the directional width 
     of $P$ in the direction $u$ is 
@@ -90,6 +90,11 @@ MathJax.Hub.Config({
     where $\langle u, p \rangle$ computes the inner product of $u$ and $p$. 
     </p>
 
+    <p>
+    The directional width of a point-set is a popular extent-measure - many algorithms for coreset construction
+    for properties such as enclosing ball, enclosing box first compute a coreset for directional width, and then 
+    prove that this coreset is a $c\epsilon$-coreset for the property of interest - where $c$ only depends upon 
+    $d$. 
     </p>
 
     <h2>Properties</h2>
