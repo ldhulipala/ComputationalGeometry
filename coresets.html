@@ -147,9 +147,28 @@ MathJax.Hub.Config({
   weight equal to $\phi$. This formulation gives us that $\phi \geq \frac{\epsilon}{10ck} v_{opt}(P,k)$. 
   </p>
   <p>
-    Consider $C_{opt}$ - the set of centers which realize $v_{opt}(P,k)$. 
-  </p> 
-  
+    Let $B$ be the set of batches resulting from our $\phi$-based split. 
+    Now, consider $C_{opt}$ - the set of centers which realize $v_{opt}(P,k)$. We use the fact that $P$
+  is in $\mathbb{R}$ to divide $B$ into two sets - the set of batches served by a single center, $B'$ and the 
+  set of batches served by more than one center. We can further bound the error, or weight of a particular 
+  batch in relation to the total weighted cost of the optimal clustering
+  $$\sum_{B_{i} \in B'} \mathcal{E}_{v}(B_{i})/2 \leq v_{opt}(P,k)$$
+  where $\mathcal{E}_{v}(B_{i})$ is the error, or weight of the batch, which we upper-bounded by construction
+  as $\phi$. Then, the size of $B'$ is $O(1 + v_{opt}(P,k)/\phi)$, as each singleton-batch in $B'$ is
+  served by exactly one center from the optimal clustering. Furthermore, there can be at most $k-1$ batches 
+  which are served by more than one center from the optimal clustering by virtue of $P$ being from 
+  $\mathbb{R}$. 
+  </p>
+  <p>
+    Thus, the number of batches is upper-bounded by $O(k + v_{opt}(P,k)/\phi)$. Expanding $\phi$,
+  we have that this is $O(k + \frac{10ck}{\epsilon}) \in O(k/e)$. 
+  </p>
+  <p>
+     The coreset construction follows by constructing $B$, the set of batches, and then taking for  
+  each batch, a representative point, $m(B_{i})$, which we add with weight $w(B_{i})$. 
+  </p>
+ 
+ 
   <h3> Potential in a Distributed Setting </h3>
   <p>
   The Merge property of coresets is especially useful in a distributed setting. If the union of 
