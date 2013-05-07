@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Clustering</title>
+  </head>
+
+  <div class="sidebar">
+    <div class="sidebar-title">
+      Topics
+    </div>
+    <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/"> Home </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/kmeans.html"> K-Means </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/coresets.html"> Coresets </a>
+    </div>
+    
+  </div>
+  
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1><a href="http://laxmandhulipala.github.io/ComputationalGeometry/">Parallel Clustering</a></h1>
+          <h2>Carnegie Mellon, 15-456</h2>
+        </header>
+
+        <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+        <hr>
+
+        <section id="main_content">
+    <h2>Coresets</h2>
+    <p>
+  Central to motivating coresets is the idea of an extent measure. Intuitively, an extent measure of
+  a point set $P$ captures some property of $P$, or characterizes a geometric shape which encloses $P$. 
+  Given some measure $\mu$ and point-set $P$, we define an $\epsilon$-coreset of $P$ to be a subset $Q \subset P$
+  such that 
+      $$(1-\epsilon)\mu(P) \leq \mu(Q)$$
+  where $\epsilon > 0$. This is a general formulation - specific problems involving coresets will sometimes change
+  the quantification of the measure, further bound $\epsilon$, or phrase the approximation in terms of $(1 + \epsilon)$. 
+    </p>
+    <h3>Coresets in Clustering</h3>
+    <p>
+  Such a coreset is of particular interest to the clustering problem. An 
+  $\epsilon$-coreset of $P$ for the $k$-median, or $k$-means problem is a weighted subset 
+  of $S$ such that for any set of $k$ points in $\mathbb{R}^d$, the weighted sum of distances from 
+  the points in $S$ to their nearest center is a $1 + \epsilon$ approximation of the sum of distances
+  from points in $P$ to their nearest center. 
+    </p>
+    <p>
+  Once we have an $\epsilon$-coreset, $S$, if $S$ is considerably smaller than $P$, we can brute-force
+  an optimal solution to $k$-medians, or $k$-means and know that this set of centers not much worse than 
+  the optimal set of centers for $P$. 
+    </p>
+    <p>
+  Other interesting questions arise when we remove the restriction of 'centers' being points in $\mathbb{R}^{d}$. For example,
+  what does the clustering problem look like when our centers are lines?
+    </p>
+
+
+    <h3>A Coreset for Directional Width</h3>
+    <p>
+    Given a point set, $P \in \mathbb{R}^{d}$, and any direction $u \in \mathbb{S}^{d-1}$, the directional width 
+    of $P$ in the direction $u$ is 
+    $$ \omega(u,P) = \max_{p \in } \langle u, p \rangle - \min_{p \in P} \langle u, p \rangle $$
+    where $\langle u, p \rangle$ computes the inner product of $u$ and $p$. 
+    </p>
+
+    </p>
+
+    <h2>Properties</h2>
+    <h4>Sketch</h4> 
+    <p>
+      Consider three sets of points $X,Y,P$ where $X \subset Y \subset P \subset \mathbb{R}^{d}$. Suppose 
+    $Y$ is an $\epsilon$-coreset (for dir. width) of $P$, and $X$ is an $\epsilon'$-coreset of $Y$, where $\epsilon, \epsilon' < 1$.
+     Then, $X$ is an $(\epsilon + \epsilon')$-coreset
+    of $P$.
+    </p>
+    <p>
+    Pf. 
+      $$(1-\epsilon)\rho(P) \leq \rho(Y)$$
+     and 
+      $$(1-\epsilon')\rho(Y) \leq \rho(X)$$
+     Then, 
+      $$(1-\epsilon)(1 -\epsilon')\rho(P) \leq (1 - (\epsilon + \epsilon'))\rho(P) \leq \rho(X)$$
+     Giving us that $X$ is a $(\epsilon + \epsilon' )$-coreset of $P$. 
+    </p>
+      <h4>Merge</h4>
+    <p>
+      Consider two coresets, $X$ and $X'$, where $X$ is an $\epsilon$-coreset of $P$ and $Y$ is an $\epsilon$-coreset of $P'$,
+      $P,P' \subset \mathbb{R}^d$. Then, $X \cup X'$ is an $\epsilon$-coreset for $P \cup P'$. 
+    </p>
+
+  <h3>Clustering Revisited</h3>
+  <p>
+  Formally now, given $P$, a set of $n$ points in $\mathbb{R}^d$, suppose we wish to compute a set 
+  $C$ of $k$ centers such that we minimize 
+   $$Cst(P_{C}) = \sum_{p \in P} d(p,C)$$
+  A weighted subset $S \subset P$ is a $(k,\epsilon)$-coreset if 
+  $$\forall C \in \mathbb{R}^{d}, (1-\epsilon)Cst(P_{C}) \leq Cst(S_{C}) \leq (1+\epsilon)Cst(P_{C})$$
+  </p>
+  <p>
+    That is to say that for any set of proposed centers $C \in \mathbb{R}^d$, the cost on the coreset is
+  an $\epsilon$-approximation of the cost on the original set of points. 
+  </p>
+  <h3>A Sketch of a Coreset in One Dimension</h3>
+  <p>
+    The presentation follows directly from [1], with some simplifications made as necessary. 
+    Our goal is to compute a subset of $P$ which is size-independent of $P$, but depends only 
+  on $k$ and $d$. We perform this by breaking $P$ into smaller sets (denoted by Har-Peled as 
+  'batches'), and choose the mean of this batch as the batch's representative for the coreset. If
+  we then show that the number of batches is independent of $n$, and that the given set of representatives
+  provide an $\epsilon$-approximation of the weighted clustering of $P$. 
+  </p> 
+  <p>
+    Denote a weighted set of points to be a set $P$, where every $p \in P$ is also assigned a weight 
+  $w_p$ which is some $r \in \mathbb{R}, r > 0$. Let $w(P)$ denote $\sum_{p \in P} w_{p}$.
+  </p>
+  <p>
+    Let $v_{C}(P) = \sum_{p \in P} w_{p} \cdot d(p,C)$ be the price of the weighted k-median clustering 
+  given a set of $C$ centers. 
+  </p>
+  <p>
+    Suppose that we are given some approximation, $V$, along with a constant $c$ such that 
+  $$v_{opt}(P,k) \leq V \leq cv_{opt}(P,k)$$
+  We then set $\phi = \frac{\epsilon}{10ck}V$, and divide up the points into batches each with 
+  weight equal to $\phi$. This formulation gives us that $\phi \geq \frac{\epsilon}{10ck} v_{opt}(P,k)$. 
+  </p>
+  <p>
+    Let $B$ be the set of batches resulting from our $\phi$-based split. 
+    Now, consider $C_{opt}$ - the set of centers which realize $v_{opt}(P,k)$. We use the fact that $P$
+  is in $\mathbb{R}$ to divide $B$ into two sets - the set of batches served by a single center, $B'$ and the 
+  set of batches served by more than one center. We can further bound the error, or weight of a particular 
+  batch in relation to the total weighted cost of the optimal clustering
+  $$\sum_{B_{i} \in B'} \mathcal{E}_{v}(B_{i})/2 \leq v_{opt}(P,k)$$
+  where $\mathcal{E}_{v}(B_{i})$ is the error, or weight of the batch, which we upper-bounded by construction
+  as $\phi$. Then, the size of $B'$ is $O(1 + v_{opt}(P,k)/\phi)$, as each singleton-batch in $B'$ is
+  served by exactly one center from the optimal clustering. Furthermore, there can be at most $k-1$ batches 
+  which are served by more than one center from the optimal clustering by virtue of $P$ being from 
+  $\mathbb{R}$. 
+  </p>
+  <p>
+    Thus, the number of batches is upper-bounded by $O(k + v_{opt}(P,k)/\phi)$. Expanding $\phi$,
+  we have that this is $O(k + \frac{10ck}{\epsilon}) \in O(k/e)$. 
+  </p>
+  <p>
+     The coreset construction follows by constructing $B$, the set of batches, and then taking for  
+  each batch, a representative point, $m(B_{i})$, which we add with weight $w(B_{i})$. Let this 
+  resulting set be $S$. As the number 
+  of batches doesn't depend on $n$, we have a set which is size-invariant as we adjust the size of $P$. 
+  </p>
+  <p>
+    Briefly, we argue why the set of means for $B$ is a $(k,\epsilon)$-coreset for $k$-centers.
+    Consider an arbitrary set of centers $C$, $|C| = k$. Then, as we are on the real-line, 
+    each $c_{i} \in C$ serves some interval of points - denote this $I_{c_{i}}$. Now, for every 
+    $B_{i} \in B$, consider whether $I(B_{i})$, or the smallest interval containing $B_{i}$. 
+    Crucially, we distinguish between batches that contain an endpoint of an interval $I_{c_{i}}$,
+    and batches that are contained in a cluster-interval, $I_{c_{i}}$. 
+  </p>
+  <p>
+    Intuitively, if a batch, $B_{i}$ is 'covered' by some center, $c_{i} \in C$, but the 
+    $c_{i} \notin I(B_{i})$, then we can prove that the $v_{c_{i}}(B_{i}) = w(B_{i})\|qm\|$, where
+    $m$ is the mean of $B_{i}$. The contribution of this batch to the clustering-cost for $S$,
+    and the clustering-cost for $P$ can thus be proven to be identical. The only batches we must 
+    consider, then, are the $B_{i}$ with a center $c_{j} \in I(B_{i})$ or those which contain 
+    an endpoint of $I_{c_{j}}$, $1 \leq j \leq k$. As there are at most $k-1$ batches which 
+    satisfy either criterion, we have that each batch can vary from the true cost of points in that 
+    batch by at most $\mathcal{E}_{v}(B)$. 
+  </p>
+  <p>
+    Thus, splitting over whether batches satisfy the criterion above, we can bound 
+    $$|v_{C}(P) - v_{C}(S)| \leq \sum_{i=1}^{k-1} \mathcal{E}_{v}(B_{i}) \leq k-1 \cdot \phi \leq \epsilon v_{opt}(P,k)$$
+  </p>
+  As $v_{opt}(P,k)$ is the optimal cost for a clustering, $C$, given our point set $P$, we can degrade this cost for 
+  any other clustering, $C$, to see that $S$ is a $(k,\epsilon)$-coreset for $k$-medians for $P$. 
+ 
+  <h3> Potential in a Distributed Setting </h3>
+  <p>
+  The Merge property of coresets is especially useful in a distributed setting. If the union of 
+  two $\epsilon$-coresets is an $\epsilon$-coreset, we can split a large set of data into $p$ subsets,
+  allocating a subset for every node. Each node then computes a $(1+\epsilon)$-coreset for the 
+  measure of interest, and performs the standard reduce operation, depicted below
+  <img class="reduce-tree" src="http://laxmandhulipala.github.io/ComputationalGeometry/images/reduce.png"></img>
+  This however causes the size of the final coreset to depend on $p$. One way to remove this reliance
+  is to compute a tighter-coreset at each node - say $\epsilon/2$. Then, upon completing the 
+  final merge, we can compute a $(1 + \epsilon/2)$-coreset of the merged coreset. As the merged coreset
+  was a $(1+ \epsilon/2)$-coreset of the original point-set, a $(1 + \epsilon/2)$ coreset of this 
+  coreset is a $(1 + \epsilon)$-coreset of the original point-set (by the Sketch property).
+  </p>
+   
+
+  <h3> Potential in a Streaming Setting </h3>
+  <p>
+  Suppose we are given a potentially infinite stream of points, where it is highly impractical
+  to store all $n$-seen points in memory. A coreset becomes invaluable in this setting, as it often
+  allows us to store a set of points whose size is independent of $n$ that computes statistics 
+  that are $(1 + \epsilon)$-approximations. 
+  </p>
+  <p>
+   A rough idea is as follows : we fill up our buffer with as many points as it can hold, and 
+   compute a $(1 + \epsilon)$-coreset for this set of points. We then merge it with any previously 
+   computed coresets, generating a larger $(1 + \epsilon)$-coreset. Under this scheme, however, 
+   our space-utilization could prove to be problematic - if the coresets are not size-independent,
+   we will quickly run out of space. 
+  </p>
+  <p>
+   A proposal : While sufficient space remains, compute $(1+\epsilon/2)$ coresets for every chunk
+  of points. Once no further data can be stored, compute a $(1 + \epsilon/2)$ coreset for the current,
+  merged coreset. This is a $(1 + \epsilon)$-coreset by the Sketch property. However, the number of points
+  could be sufficiently large that even these doubly-constructed $(1+\epsilon)$-coresets cause 
+  us to run out of memory. 
+  </p>
+  <p>
+    If we know our stream is non-infinite, but contains some $n$ elements, we can determine a constant 
+  $\alpha$, parametrized by $\epsilon$, the size of the data-buffer, and the memory capacity so that we 
+  initially compute 
+  $(1 + \epsilon/\alpha)$-coresets, then when they overflow memory, a $(1 + 2\epsilon/\alpha)$-coreset of
+  the $(1 + \epsilon/\alpha)$-coreset,
+  and so on, until we finally compute a $(1 + \epsilon)$-coreset of the entire set of $n$ points. 
+  </p>
+
+  <h3>Sources</h3>
+  <p>
+  [1] S. Har-Peled and A. Kushal. Smaller Coresets for $k$-Median and $k$-Means Clustering. October 31, 2012.
+  </p>
+  <p>
+   [2] D. Feldman, M. Schmidt, and C. Sohler. Turning Big Data into Tiny Data: Constant-size Coresets for k-means, PCA and Projective Clustering,
+     Proc. 24th Annu. ACM  Symp. on Discrete Algorithms (SODA) 2013.
+  </p>
+    
+    
+
+        </section>
+
+        <footer>
+          This site is maintained by <a href="https://github.com/laxmandhulipala">laxmandhulipala</a><br>
+        </footer>
+        
+      </div>
+    </div>
+  </body>
+</html>

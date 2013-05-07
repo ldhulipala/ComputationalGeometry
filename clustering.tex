@@ -1,0 +1,62 @@
+% You should title the file with a .tex extension (hw1.tex, for example)
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+
+
+\oddsidemargin0cm
+\topmargin-1.5cm     %I recommend adding these three lines to increase the
+\textwidth16.5cm   %amount of usable space on the page (and save trees)
+\textheight23.5cm
+
+\newcommand{\question}[2] {\vspace{.25in} \hrule\vspace{0.5em}
+\noindent{\bf #1: #2} \vspace{0.5em}
+\hrule \vspace{.10in}}
+\renewcommand{\part}[1] {\vspace{.10in} {\bf (#1)}}
+
+\newcommand{\myname}{Laxman Dhulipala}
+\newcommand{\myandrew}{ldhulipa@andrew.cmu.edu}
+\newcommand{\myhwnum}{5}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+
+\pagestyle{fancyplain}
+
+
+\begin{document}
+
+\medskip                        % Skip a "medium" amount of space
+                                % (latex determines what medium is)
+                                % Also try: \bigskip, \littleskip
+
+\thispagestyle{plain}
+\begin{center}                  % Center the following lines
+{\Large Coresets} \\
+\myname \\
+\myandrew
+\end{center}
+
+\newcommand{\betaskel}[0]{$\beta$-skeleton}
+
+\section{Clustering}
+
+A central theme throughout Har-Peled's work is the idea of efficient approximation. Even if a problem appears
+to be computationally intractable, it's likely that we can find an approximation of some sort. However, let's 
+first take a look at some general clustering problems first. 
+
+Intuitively, a cluster is a set of objects, $S$, from a given set of objects, $P$, that are more `similar' 
+in some way within $S$ than to objects outside of $S$. In particular, the objects we will examine are points
+typically in $\mathbb{R}^{d}$, with similarity generally being captured by distance, or minimizing the total 
+weight of points in a cluster. 
+
+Har-Peled presents his definition similarly : Given an input point set, $P$, where $P$ is a part of a metric
+space with distance function $d$, we can, given another set of centers, $C$, cluster every point of $P$
+to its nearest neighbour in $C$. 
+
+
+
+
+\end{document}
