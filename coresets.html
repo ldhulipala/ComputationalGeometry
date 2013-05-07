@@ -126,6 +126,7 @@ MathJax.Hub.Config({
   </p>
   <h3>A Sketch of a Coreset in One Dimension</h3>
   <p>
+    The presentation follows directly from [1], with some simplifications made as necessary. 
     Our goal is to compute a subset of $P$ which is size-independent of $P$, but depends only 
   on $k$ and $d$. We perform this by breaking $P$ into smaller sets (denoted by Har-Peled as 
   'batches'), and choose the mean of this batch as the batch's representative for the coreset. If
@@ -165,9 +166,34 @@ MathJax.Hub.Config({
   </p>
   <p>
      The coreset construction follows by constructing $B$, the set of batches, and then taking for  
-  each batch, a representative point, $m(B_{i})$, which we add with weight $w(B_{i})$. 
+  each batch, a representative point, $m(B_{i})$, which we add with weight $w(B_{i})$. Let this 
+  resulting set be $S$. As the number 
+  of batches doesn't depend on $n$, we have a set which is size-invariant as we adjust the size of $P$. 
   </p>
- 
+  <p>
+    Briefly, we argue why the set of means for $B$ is a $(k,\epsilon)$-coreset for $k$-centers.
+    Consider an arbitrary set of centers $C$, $|C| = k$. Then, as we are on the real-line, 
+    each $c_{i} \in C$ serves some interval of points - denote this $I_{c_{i}}$. Now, for every 
+    $B_{i} \in B$, consider whether $I(B_{i})$, or the smallest interval containing $B_{i}$. 
+    Crucially, we distinguish between batches that contain an endpoint of an interval $I_{c_{i}}$,
+    and batches that are contained in a cluster-interval, $I_{c_{i}}$. 
+  </p>
+  <p>
+    Intuitively, if a batch, $B_{i}$ is 'covered' by some center, $c_{i} \in C$, but the 
+    $c_{i} \notin I(B_{i})$, then we can prove that the $v_{c_{i}}(B_{i}) = w(B_{i})\|qm\|$, where
+    $m$ is the mean of $B_{i}$. The contribution of this batch to the clustering-cost for $S$,
+    and the clustering-cost for $P$ can thus be proven to be identical. The only batches we must 
+    consider, then, are the $B_{i}$ with a center $c_{j} \in I(B_{i})$ or those which contain 
+    an endpoint of $I_{c_{j}}$, $1 \leq j \leq k$. As there are at most $k-1$ batches which 
+    satisfy either criterion, we have that each batch can vary from the true cost of points in that 
+    batch by at most $\mathcal{E}_{v}(B)$. 
+  </p>
+  <p>
+    Thus, splitting over whether batches satisfy the criterion above, we can bound 
+    $$|v_{C}(P) - v_{C}(S)| \leq \sum_{i=1}^{k-1} \mathcal{E}_{v}(B_{i}) \leq k-1 \cdot \phi \leq \epsilon v_{opt}(P,k)$$
+  </p>
+  As $v_{opt}(P,k)$ is the optimal cost for a clustering, $C$, given our point set $P$, we can degrade this cost for 
+  any other clustering, $C$, to see that $S$ is a $(k,\epsilon)$-coreset for $k$-medians for $P$. 
  
   <h3> Potential in a Distributed Setting </h3>
   <p>
@@ -213,7 +239,16 @@ MathJax.Hub.Config({
   the $(1 + \epsilon/\alpha)$-coreset,
   and so on, until we finally compute a $(1 + \epsilon)$-coreset of the entire set of $n$ points. 
   </p>
-   
+
+  <h3>Sources</h3>
+  <p>
+  [1] S. Har-Peled and A. Kushal. Smaller Coresets for $k$-Median and $k$-Means Clustering. October 31, 2012.
+  </p>
+  <p>
+   [2] D. Feldman, M. Schmidt, and C. Sohler. Turning Big Data into Tiny Data: Constant-size Coresets for k-means, PCA and Projective Clustering,
+     Proc. 24th Annu. ACM  Symp. on Discrete Algorithms (SODA) 2013.
+  </p>
+    
     
 
         </section>
