@@ -37,7 +37,7 @@
       <div class="inner">
 
         <header>
-          <h1>Parallel Clustering</h1>
+          <h1><a href="http://laxmandhulipala.github.io/ComputationalGeometry/">Parallel Clustering</a></h1>
           <h2>Carnegie Mellon, 15-456</h2>
         </header>
 
@@ -56,15 +56,23 @@ MathJax.Hub.Config({
         <hr>
 
         <section id="main_content">
-          <h2>Clustering</h2>
+    <h2>Overview</h2>
+<p>
+  In this project, I sought to understand and implement algorithms in parallel clustering. I was specifically interested 
+  in parallel clustering as parallel or distributed algorithms for clustering are crucial in today's world. I first implemented
+  a sequential and parallel version of a standard k-means algorithm. I then investigated coresets, which have recently risen to 
+  prominence as a potential way to produce an $(1 + \epsilon)$-approximation to the $k$-means and $k$-centers problems, as well
+  as various other geometric extent-measure problems. 
+</p>
 
+    <h2>Clustering</h2>
 <p>
 Very broadly, the Clustering problem is to place place objects, for our purposes points in \(\mathbb{R}^{n}\),
 in groups such that the within-group similarity is very high. Concretely, given a set of objects \(P\), and a set 
 of centers \(C\) in some metric
 space \(\mathcal{X}, d\), where \(d : \mathcal{X} \times \mathcal{X} \mapsto [0, \infty) \) satisfying the standard 
 axioms of a metric, we can assign every point of \(P\) to it's nearest neighbour in \(C\). Typically, there is also a 
-cost associated with a clustering, which we minimize. 
+cost associated with a clustering, which we attempt to minimize. 
 </p>
         </section>
 
