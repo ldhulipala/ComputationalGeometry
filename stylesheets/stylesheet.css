@@ -57,11 +57,11 @@ body {
 }
 
 a {
-  color: #00000;
+  color: #000000;
 }
 
 a:hover {
-  color: #c5000c;
+  color: #888;
 }
 
 header {
@@ -374,6 +374,7 @@ footer a:hover {
   padding-bottom : 0.6em;
   text-align : left;
   font-size: 1.5em;
+  color : #dddddd;
 }
 
 .sidebar-elem {
@@ -387,7 +388,7 @@ footer a:hover {
   font-style : normal;
   font-weight : 10; 
   text-shadow : none;
-  color : #FFFFFF;
+  color : #dddddd;
 }
 
 .sidebar-elem a:hover {
