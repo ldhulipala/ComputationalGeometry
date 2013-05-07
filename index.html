@@ -153,19 +153,28 @@ Slave:
 <h3>Usage</h3>
 <p>
   Both the sequential and parallel implementations require an input file of newline delimited points, where each point is two 
-  space delimited floats. Example compilation and execution is given below : 
+  space delimited floats. Example compilation and execution for the sequential implementation is given below. The parameter 
+  $k$ is the number of centers to compute. 
   <pre><code>$mpicxx seq.cc -o seq.out
-$./seq.out inputs/3clust100k.txt 3
-$d = 9223372036854775808.000000
-$d = 1.927183
-$d = 1.601250
-$d = 0.464520
-Finished after 4 iterations, centers are :
+$./seq.out inputfile.txt k
+Finished after 4 iterations, Centers are :
 Point = (5.692603,4.003222)
 Point = (3.083077,7.408052)
 Point = (4.717878,0.942966)
+...
   </code></pre>
 </p>
+  Example compilation and execution for the parallel implementation is given below. $p$ is the number of nodes to use. 
+  You must ensure that the hostfile contains at least $p$ machines. The parameter $k$ is the number of centers to compute. 
+  <pre><code>$mpicxx par.cc -o par.out
+$mpirun -np p -machinefile hostfile.txt ./a.out inputfile.txt k
+Finished after 4 iterations, Centers are :
+Point = (5.692603,4.003222)
+Point = (3.083077,7.408052)
+Point = (4.717878,0.942966)
+...
+  </code></pre>
+
 
 <h3>Coresets</h3>
 
