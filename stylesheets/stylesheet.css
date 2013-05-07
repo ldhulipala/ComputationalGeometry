@@ -57,8 +57,9 @@ body {
 }
 
 a {
-  color: #d5000d;
+  color: #00000;
 }
+
 a:hover {
   color: #c5000c;
 }
@@ -101,8 +102,6 @@ header h2 {
 #downloads {
   margin-bottom: 40px;
 }
-
-
 
 .sidebar-collapsed {
     position: fixed;
@@ -354,6 +353,50 @@ footer a:hover {
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
 
+
+.sidebar {                                                                     
+    position : fixed;                                                           
+    float : left;
+    background-color : #282827;   
+    z-index: 100;
+    width: 140px;    
+    height: 100%;                                                              
+    padding: 0px 0px 0px 0px;                                                 
+    text-align: right;
+    left : 0;
+    top : 0;
+    color : white;                                                             
+}
+
+.sidebar-title {
+  padding-top : 2em;
+  padding-left : 0.5em;
+  padding-bottom : 0.6em;
+  text-align : left;
+  font-size: 1.5em;
+}
+
+.sidebar-elem {
+  padding-top : 0.1em;
+  padding-bottom: 0.1em;
+  padding-left : 1em;
+  text-align : left;
+}
+
+.sidebar-elem a {
+  font-style : normal;
+  font-weight : 10; 
+  text-shadow : none;
+  color : #FFFFFF;
+}
+
+.sidebar-elem a:hover {
+  color : #aaa;
+}
+
+body {
+  margin-left : 140px;
+}
 
 
 /* #Media Queries
