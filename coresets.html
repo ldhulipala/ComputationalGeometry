@@ -57,7 +57,10 @@ MathJax.Hub.Config({
   Given some measure $\mu$ and point-set $P$, we define an $\epsilon$-coreset of $P$ to be a subset $Q \subset P$
   such that 
       $$(1-\epsilon)\mu(P) \leq \mu(Q)$$
+  where $\epsilon > 0$. This is a general formulation - specific problems involving coresets will sometimes change
+  the quantification of the measure, further bound $\epsilon$, or phrase the approximation in terms of $(1 + \epsilon)$. 
     </p>
+    <h3>Coresets in Clustering</h3>
     <p>
   Such a coreset is of particular interest to the clustering problem. An 
   $\epsilon$-coreset of $P$ for the $k$-median, or $k$-means problem is a weighted subset 
@@ -75,6 +78,7 @@ MathJax.Hub.Config({
   what does the clustering problem look like when our centers are lines?
     </p>
 
+
     <h3>A Coreset for Directional Width</h3>
     <p>
     Given a point set, $P \in \mathbb{R}^{d}$, and any direction $u \in \mathbb{S}^{d-1}$, the directional width 
@@ -89,6 +93,48 @@ MathJax.Hub.Config({
     
 
     </p>
+
+    <h2>Properties</h2>
+    <h4>Sketch</h4> 
+    <p>
+      Consider three sets of points $X,Y,P$ where $X \subset Y \subset P \subset \mathbb{R}^{d}$. Suppose 
+    $Y$ is an $\epsilon$-coreset (for dir. width) of $P$, and $X$ is an $\epsilon'$-coreset of $Y$, where $\epsilon, \epsilon' < 1$.
+     Then, $X$ is an $(\epsilon + \epsilon')$-coreset
+    of $P$.
+    </p>
+    <p>
+    Pf. 
+      $$(1-\epsilon)\rho(P) \leq \rho(Y)$$
+     and 
+      $$(1-\epsilon')\rho(Y) \leq \rho(X)$$
+     Then, 
+      $$(1-\epsilon)(1 -\epsilon')\rho(P) \leq (1 - (\epsilon + \epsilon'))\rho(P) \leq \rho(X)$$
+     Giving us that $X$ is a $(\epsilon + \epsilon' )$-coreset of $P$. 
+    </p>
+      <h4>Merge</h4>
+    <p>
+      Consider two coresets, $X$ and $X'$, where $X$ is an $\epsilon$-coreset of $P$ and $Y$ is an $\epsilon$-coreset of $P'$,
+      $P,P' \subset \mathbb{R}^d$. Then, $X \cup X'$ is an $\epsilon$-coreset for $P \cup P'$. 
+    </p>
+
+  <h3>Clustering Revisited</h3>
+  Formally now, given $P$, a set of $n$ points in $\mathbb{R}^d$, suppose we wish to compute a set 
+  $C$ of $k$ centers such that we minimize 
+   $$Cst(P_{C}) = \sum_{p \in P} d(p,C)$$. 
+  A weighted subset $S \subset P$ is a $(k,\epsilon)$-coreset if 
+  $$\forall C \in \mathbb{R}^{d}, (1-\epsilon)Cst(P_{C}) \leq Cst(S_{C}) \leq (1+\epsilon)Cst(P_{C})$$
+
+  
+  <h3> Potential in a Distributed Setting </h3>
+  The Merge property of coresets is especially useful in a distributed setting. If the union of 
+  two $\epsilon$-coresets is an $\epsilon$-coreset, we can split a large set of data into $p$ subsets,
+  allocating a subset for every node. Each node then computes a $(1+\epsilon)$-coreset for the 
+  measure of interest, and performs the standard reduce operation, depicted below
+  <img src="../images/reduce.png"></img>
+
+    
+   
+    
 
         </section>
 
