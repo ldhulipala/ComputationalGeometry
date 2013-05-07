@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Clustering</title>
+  </head>
+
+  <div class="sidebar">
+    <div class="sidebar-title">
+      Topics
+    </div>
+    <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/"> Home </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/kmeans.html"> K-Means </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/coresets.html"> Coresets </a>
+    </div>
+    
+  </div>
+  
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Parallel Clustering</h1>
+          <h2>Carnegie Mellon, 15-456</h2>
+        </header>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+        <hr>
+
+        <section id="main_content">
+
+<h3>K-Means Clustering</h3>
+<p>
+Suppose we are given a set of points, \(P, |P| = n\), as well as a parameter \(k \in \mathbb{N}\). The k-means problem
+is to find a set of \(k\) points which minimize the sum-of-squares distances of every point in $P$ to their closest
+point in $C$. Concretely, this cost is
+$$ |P_{c}|^{2}_{2} = \sum_{p \in P} d_{\mathcal{M}}(p,C))^{2} $$
+where the $k$-means problem is to then find a set $k$ centers, $C$, such that 
+$\|P_{c}\|^{2}_{2}$ is minimized.
+</p>
+<h3>Sequential K-Means</h3>
+<p>
+The simplest, and perhaps most intuitive algorithm for computing a set of $C$ centers is Lloyd's Algorithm, 
+which is done iteratively by relaxing the Voronoi diagram at each step. The algorithm proceed as follows : 
+<pre><code>proc kMeans(P,k)
+  C :=  k initial centers randomly chosen from P.
+  convergence := +infty
+  repeat while (convergence > epsilon):
+    drift := 0
+    for all p in P:
+      assign p to the cluster of it's nearest neighbour
+    for all c in C:
+      nC := centroid of c's cluster
+      drift := max(drift, d(nC,c))
+      c := nC
+    convergence := drift
+  return C
+</code></pre>
+</p>
+<p>
+The centroid is the mean of the points in a cluster. As we iteratively set new cluster centers to be the
+centroids of their cluster, points which were initially not a part of a cluster could then join the cluster. 
+We terminate the algorithm when the convergence, which captures how far the centroids moved during the last
+iteration is less than some $\epsilon$. 
+</p>
+
+<h3>Parallel K-Means</h3>
+<p>
+  We can optimize the k-means algoritm for cluster-based computing settings by dividing splitting $P$, the input
+  point set amongst a set of $p \geq 2$ processors. The work on a node then 
+  becomes to centroid-sums for each of the $k$ current, global centers. The node then sends its local 
+  centroid-sums back to a master-node, who calculates a global sum for each centroid, and divides this sum by the number of 
+  points assigned to that center, globally, to calculate the new center. Dividing up the pseudo-code into the master task
+  and slave task, we have
+
+<pre class="brush: python"></code> Master:
+  C := k initial centers randomly chosen from P
+  convergence := +infty
+  split P up amongst all p nodes
+  repeat while (convergence > epsilon):
+    drift := 0  
+    Broadcast(C)
+    nodeCents := Gather(localCentroidSums,(p1,p2,...,pn))
+    for all c in C:
+      cSum := sum of all localSum.sum's for this cluster 
+      numPts := sum of all localSum.numPts's for this cluster 
+      c' := cSum/numPts
+      drift = max(drift, d(c',c))
+      c := c'
+    convergence := drift
+    Broadcast(convergence)
+  return C 
+     
+Slave:
+  localP := subset of P recieved from Master
+  convergence := +infty
+  C := <>
+  convergence := +infty
+  repeat while (convergence > epsilon):
+    Recieve(C)
+    for all p in P:
+      assign p to the cluster of it's nearest neighbour
+    localCentroidSums := <>
+    for all c in C:
+      localSum.sum := sum of all p in c's cluster
+      localsum.numPts := size of c's cluster
+      localCentroidSums += localSum
+    Send(localCentroidSum)
+    Recieve(convergence)
+</code></pre>
+</p>
+<p>
+  Because we wait until this single-node join to calculate the new centroid, it's clear that this algorithm is
+  equivalent to the sequential algorithm, in that it converges in the same number of iterations. We make our gains
+  in the fact that any given node is only dealing with a $\frac{|P|}{p}$ sized set of points.
+</p>
+<p>
+   However, we do pay 
+  a communication overhead - for each iteration there are $k+1$ messages to transmit the current centers and convergence, 
+  and $pk$ messages to send all localSums to the master, giving a total of $O(pk)$ messages per round. 
+</p>
+
+<h3>Implementation</h3>
+<p>
+  The tarball consists of both a parallel and sequential implementation of Lloyd's algorithm for points in $\mathbb{R}^{2}$ 
+  in C++. The parallel implementation
+  uses OpenMPI, which implements the MPI semantics. The parallel version is also implemented so that every machine runs the same
+  binary, where the rank of a node (assigned by MPI) determines whether the node is a master or slave. 
+</p>
+
+<h3>Usage</h3>
+<p>
+  Both the sequential and parallel implementations require an input file of newline delimited points, where each point is two 
+  space delimited floats. Example compilation and execution for the sequential implementation is given below. The parameter 
+  $k$ is the number of centers to compute. 
+  <pre><code>$mpicxx seq.cc -o seq.out
+$./seq.out inputfile.txt k
+Finished after 4 iterations, Centers are :
+Point = (5.692603,4.003222)
+...
+Point = (3.083077,7.408052)
+Point = (4.717878,0.942966)
+  </code></pre>
+</p>
+  Example compilation and execution for the parallel implementation is given below. $p$ is the number of nodes to use. 
+  You must ensure that the hostfile contains at least $p$ machines. The parameter $k$ is the number of centers to compute. 
+  <pre><code>$mpicxx par.cc -o par.out
+$mpirun -np p -machinefile hostfile.txt ./a.out inputfile.txt k
+Finished after 4 iterations, Centers are :
+Point = (5.692603,4.003222)
+...
+Point = (3.083077,7.408052)
+Point = (4.717878,0.942966)
+  </code></pre>
+
+
+<h3>Coresets</h3>
+
+
+
+<h3>Coresets</h3>
+A z
+
+        </section>
+
+        <footer>
+          This site is maintained by <a href="https://github.com/laxmandhulipala">laxmandhulipala</a><br>
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
