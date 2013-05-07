@@ -124,10 +124,31 @@ MathJax.Hub.Config({
     That is to say that for any set of proposed centers $C \in \mathbb{R}^d$, the cost on the coreset is
   an $\epsilon$-approximation of the cost on the original set of points. 
   </p>
+  <h3>A Sketch of a Coreset in One Dimension</h3>
   <p>
-    The original 
+    Our goal is to compute a subset of $P$ which is size-independent of $P$, but depends only 
+  on $k$ and $d$. We perform this by breaking $P$ into smaller sets (denoted by Har-Peled as 
+  'batches'), and choose the mean of this batch as the batch's representative for the coreset. If
+  we then show that the number of batches is independent of $n$, and that the given set of representatives
+  provide an $\epsilon$-approximation of the weighted clustering of $P$. 
+  </p> 
+  <p>
+    Denote a weighted set of points to be a set $P$, where every $p \in P$ is also assigned a weight 
+  $w_p$ which is some $r \in \mathbb{R}, r > 0$. Let $w(P)$ denote $\sum_{p \in P} w_{p}$.
   </p>
-
+  <p>
+    Let $v_{C}(P) = \sum_{p \in P} w_{p} \cdot d(p,C)$ be the price of the weighted k-median clustering 
+  given a set of $C$ centers. 
+  </p>
+  <p>
+    Suppose that we are given some approximation, $V$, along with a constant $c$ such that 
+  $$v_{opt}(P,k) \leq V \leq cv_{opt}(P,k)$$
+  We then set $\phi = \frac{\epsilon}{10ck}V$, and divide up the points into batches each with 
+  weight equal to $\phi$. This formulation gives us that $\phi \geq \frac{\epsilon}{10ck} v_{opt}(P,k)$. 
+  </p>
+  <p>
+    Consider $C_{opt}$ - the set of centers which realize $v_{opt}(P,k)$. 
+  </p> 
   
   <h3> Potential in a Distributed Setting </h3>
   <p>
