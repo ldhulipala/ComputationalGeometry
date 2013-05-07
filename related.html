@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Clustering</title>
+  </head>
+
+  <div class="sidebar">
+    <div class="sidebar-title">
+      Topics
+    </div>
+    <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/"> Home </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/kmeans.html"> K-Means </a>
+    </div>
+   <div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/coresets.html"> Coresets </a>
+    </div>
+<div class="sidebar-elem">
+      <a href="http://laxmandhulipala.github.io/ComputationalGeometry/related.html"> Related Work</a>
+    </div>
+    
+  </div>
+  
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1><a href="http://laxmandhulipala.github.io/ComputationalGeometry/">Parallel Clustering</a></h1>
+          <h2>Carnegie Mellon, 15-456</h2>
+        </header>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
+        <hr>
+
+        <section id="main_content">
+    <h2>Gabriel Graphs</h2>
+<p>
+Given a point set $P$ of points in $\mathbb{R}^d$ we define an edge 
+$(p_i,p_j)$ of two points, $p_i,p_j \in P$ to belong to the Gabriel Graph of $P$,
+$GG(P)$
+if the smallest radius $d(p_i,p_j)/2$ ball containing $p_i,p_j$ contains no 
+other points in its interior or boundary, where $d(p_{i}, p_{j})$ 
+denotes the Euclidean distance between the two points. 
+</p>
+<p>
+We define the $k$-Gabriel graph of $P$, $k-GG(P)$ similarly, 
+admitting an edge $e = (p_i,p_j)$
+to the graph if the smallest radius $d(p_i,p_j)/2$ ball containing $p_i,p_j$
+contains $k-1$ many other points in its interior or boundary.
+$GG(P)$ is thus equivalent to $1-GG(P)$.
+</p>
+<h3>Brute-Force Construction</h3>
+<p>
+A straightforward, brute-force solution to construct $k-GG(P)$ , is to consider all 
+$O(n^{2})$ many possible edges, and check, using the \texttt{inCircle} predicate
+whether the $n-2$ other points are outside of the circle. As the \texttt{inCircle}
+predicate costs $O(d)$, in dimension $d$, for large dimensions, this method results
+in an $O(dn^{3})$ algorithm, which is an inefficient but reliable way to construct
+$k-GG(P)$.
+</p>
+
+<h2>Relative Neighbourhood Graphs</h2>
+<p>
+A subgraph of the Gabriel Graph that is of considerable interest is the Relative Neighbourhood
+Graph, of RNG of a point set. More generally, consider a point set $P = \{p_1,...,p_n\}$ 
+where each $p_i \in R^{d}$. We admit an edge $e = (p_i, p_j)$ to the graph if 
+$$d(p_i,p_j) \leq \max_{k \neq i,j, k \in P}(d(p_i,p_k), d(p_j,p_k))$$
+where $d(p_i,p_j)$ computes the distance on the $L_2$ metric.
+</p>
+<p>
+Originally introduced by Toussaint, he motivates the problem by providing some potential
+applications, such as use in clustering - where two points should have an edge between 
+each other if it's likely that they belong to the same cluster. In other words, the
+existence of an edge
+between two points should indicate some degree of 'similarity'. Another algorithm could then 
+use the RNG, or other `proximity graph' to only consider a small subset of all possible edges, which 
+in the case of the Gabriel Graph or RNG is linear in the number of vertices. 
+</p>
+<p>
+The relative neighbourhood graph is of particular interest due to it's potential for instance 
+based learning algorithms in Machine Learning. In particular, the RNG is important when trying
+to reduce the size of a training set. For example, the RNG can be used to reduce the size of the 
+training set, while still avoiding misclassification. Emperical studies
+have shown that graphs such as the Gabriel Graph tend to become complete once the 
+dimensionality of our data set grows large, suggesting  sparser graphs such as the Relative 
+Neighbourhood Graph and the Minimum Spanning Tree may perform better on  higher dimensional data sets.
+</p>
+<!--
+<h2>Other Interesting Tidbits </h2>
+
+
+-->
+
+
+
+        </section>
+
+        <footer>
+          This site is maintained by <a href="https://github.com/laxmandhulipala">laxmandhulipala</a><br>
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
