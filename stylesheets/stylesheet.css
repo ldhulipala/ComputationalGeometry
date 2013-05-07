@@ -100,9 +100,11 @@ header h2 {
 }
 
 .reduce-tree {
+  padding-top : 1em;
   margin-left : auto;
   margin-right : auto;
   display : block;
+  padding-bottom : 1em;
 }
 
 #downloads {
